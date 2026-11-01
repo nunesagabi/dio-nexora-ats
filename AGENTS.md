@@ -8,3 +8,9 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Nexora architecture
+- User data is read/written from the browser via the Supabase client with per-user RLS (`user_id = auth.uid()`); why: simple, isolated per user.
+- Job search, AI (match, resume) and account deletion live in `src/lib/nexora.functions.ts` server functions; why: keep API keys and prompts server-side.
+- Job sources: Remotive (no key) and Adzuna Brasil (needs ADZUNA_APP_ID/ADZUNA_APP_KEY secrets); a missing source is reported, never faked.
+- Resumes are stored as plain text (#/##/###/-) and exported via browser print for selectable, single-column ATS PDFs.
