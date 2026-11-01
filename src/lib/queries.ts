@@ -7,9 +7,9 @@ async function uid() {
   return data.user.id;
 }
 
-function must<T>(r: { data: T | null; error: { message: string } | null }): T {
+function must<R extends { data: unknown; error: { message: string } | null }>(r: R): NonNullable<R["data"]> {
   if (r.error) throw new Error(r.error.message);
-  return r.data as T;
+  return r.data as NonNullable<R["data"]>;
 }
 
 export const profileQuery = queryOptions({

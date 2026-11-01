@@ -62,7 +62,16 @@ function AuthPage() {
         if (error) throw error;
       }
     } catch (err) {
-      toast.error((err as Error).message === "Invalid login credentials" ? "E-mail ou senha incorretos." : (err as Error).message);
+      const m = (err as Error).message;
+      const pt: [RegExp, string][] = [
+        [/Invalid login credentials/i, "E-mail ou senha incorretos."],
+        [/Email not confirmed/i, "Confirme seu e-mail pelo link que enviamos antes de entrar."],
+        [/already registered/i, "Este e-mail já tem conta. Use “entrar” ou recupere a senha."],
+        [/not allowed|invalid/i, "Use um e-mail real e válido."],
+        [/Password/i, "Senha fraca: use pelo menos 8 caracteres, misturando letras e números."],
+        [/rate limit/i, "Muitas tentativas. Aguarde alguns minutos."],
+      ];
+      toast.error(pt.find(([r]) => r.test(m))?.[1] ?? m);
     } finally {
       setLoading(false);
     }
